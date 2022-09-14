@@ -1,11 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import UserEditView from "@/views/UserEditView.vue"
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/edit/:id',
+    name: 'edit',
+    component: UserEditView
   },
   {
     path: '/about',

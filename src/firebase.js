@@ -2,7 +2,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
-import {ref, onUnmounted } from 'vue'
+import { ref, onUnmounted } from 'vue'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -21,6 +21,32 @@ const userCollection = db.collection("users");
 
 export const createUser = user => {
     return userCollection.add(user);
+};
+
+export const updateUser = (id, user) => {
+  return userCollection.doc(id).update(user);
+};
+
+export const deleteUser = (id) => {
+  return userCollection.doc(id).delete();
+};
+
+export const getUser = id => {
+  const user = ref({name: '', email: ''});
+  const close = userCollection.doc(id).onSnapshot(snapshot => {
+    user.value = snapshot.data();
+  }); 
+  onUnmounted(close);
+  return user;
+}
+
+export const loadUsers = () => {
+  const users = ref([]);
+  const close = userCollection.onSnapshot(snapshot => {
+    users.value = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+  });
+  onUnmounted(close);
+  return users;
 };
 
 
